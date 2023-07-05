@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Car Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <button id="scrape-button">Run Status</button>
+    <table id="car-table">
+        <thead>
+            <tr>
+                <th>Number Plate</th>
+                <th>Location</th>
+                <th>Motion State</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        // Keep track of displayed car number plates
+        var displayedCars = [];
+
+        // Function to update the table with car data
+        function updateTable() {
+            $.getJSON('/get_car_data', function(data) {
+                // Iterate over the car data
+                for (var i = 0; i < data.length; i++) {
+                    var car = data[i];
+
+                    // Check if the car number plate is already displayed
+                    if (displayedCars.includes(car.number_plate)) {
+                        continue; // Skip this car if it's already displayed
+                    }
+
+                    // Create a new row for the car data
+                    var row = $('<tr>');
+                    row.append($('<td>').text(car.number_plate));
+                    row.append($('<td>').text(car.location));
+                    row.append($('<td>').text(car.motion_state));
+
+                    // Check if the car is parked
+                    if (car.motion_state === 'Parked') {
+                        row.append($('<td>').text(car.duration));
+                    } else {
+                        row.append($('<td>').text('__________'));
+                    }
+
+                    // Append the new row to the table
+                    $('#car-table tbody').append(row);
+
+                    // Add the car number plate to the displayedCars array
+                    displayedCars.push(car.number_plate);
+                }
+            });
+        }
+
+        // Update the table every 5 seconds
+        setInterval(updateTable, 5000);
+
+        // Add a click event listener to the scrape-button
+        $('#scrape-button').on('click', function() {
+            // Send a GET request to the /data route to trigger the data scraping
+            $.get('/data');
+            // Disable the button to prevent multiple clicks
+            $(this).prop('disabled', true);
+        });
+    </script>
+</body>
+
+</html>
