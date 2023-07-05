@@ -30,7 +30,10 @@ def data():
     options = EdgeOptions()
     options.use_chromium = True
     options.add_argument('--headless')
-    driver_path = 'C:\\Program Files\\msedgedriver.exe'
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the relative file path to the WebDriver executable
+    driver_path = os.path.join(current_directory, 'msedgedriver.exe')
     driver = Edge(executable_path=driver_path, options=options)
     driver.get('https://wialon.3dservices.co.ug/')
     username_field = driver.find_element(By.CSS_SELECTOR, '#user')
