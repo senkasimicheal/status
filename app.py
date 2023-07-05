@@ -32,7 +32,7 @@ def data():
     options.add_argument('--headless')
     driver_path = EdgeChromiumDriverManager().install()
     # Create the WebDriver instance
-    driver = webdriver.Edge(executable_path=driver_path)
+    driver = Edge(executable_path=driver_path, options=options)
     driver.get('https://wialon.3dservices.co.ug/')
     username_field = driver.find_element(By.CSS_SELECTOR, '#user')
     password_field = driver.find_element(By.CSS_SELECTOR, '#passw')
