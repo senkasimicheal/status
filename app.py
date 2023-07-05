@@ -11,8 +11,8 @@ from selenium.common.exceptions import NoSuchElementException
 import secrets
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 import os
-import stat
 
 app = Flask(__name__, template_folder='.')
 app.secret_key = secrets.token_hex(16)
@@ -30,8 +30,9 @@ def data():
     options = EdgeOptions()
     options.use_chromium = True
     options.add_argument('--headless')
-    driver_path = 'C:\\Program Files\\msedgedriver.exe'
-    driver = Edge(executable_path=driver_path, options=options)
+    driver_path = EdgeChromiumDriverManager().install()
+    # Create the WebDriver instance
+    driver = webdriver.Edge(executable_path=driver_path, options=options)
     driver.get('https://wialon.3dservices.co.ug/')
     username_field = driver.find_element(By.CSS_SELECTOR, '#user')
     password_field = driver.find_element(By.CSS_SELECTOR, '#passw')
